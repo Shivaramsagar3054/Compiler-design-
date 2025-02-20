@@ -1,0 +1,22 @@
+#include <stdio.h>
+
+void findFirst(char c);
+
+int main() {
+    char c;
+    printf("Enter a character: ");
+    scanf(" %c", &c);
+    printf("FIRST(%c) = { ", c);
+    findFirst(c);
+    printf("}\n");
+    return 0;
+} 
+void findFirst(char c) {
+    if (c == 'A') {
+        printf("a b ");
+    } else if (c == 'B') {
+        printf("c d ");
+    } else {
+        printf("%c ", c);
+    }
+}
