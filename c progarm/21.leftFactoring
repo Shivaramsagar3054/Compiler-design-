@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 10
+
+void leftFactor(char productions[MAX][MAX], int n) {
+    for (int i = 0; i < n; i++) {
+        char prefix[MAX];
+        int prefixLen = 0;
+        
+        for (int j = 0; j < strlen(productions[i]); j++) {
+            if (productions[i][j] == '|') {
+                break;
+            }
+            prefix[prefixLen++] = productions[i][j];
+        }
+        prefix[prefixLen] = '\0';
+        
+        printf("Left Factored Production: %s -> %sX\n", productions[i], prefix);
+        printf("X -> epsilon | remaining_alternatives\n");
+    }
+}
+
+int main() {
+    int n;
+    char productions[MAX][MAX];
+    
+    printf("Enter the number of productions: ");
+    scanf("%d", &n);
+    
+    printf("Enter the productions (e.g., A=abc|abd):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%s", productions[i]);
+    }
+    
+    leftFactor(productions, n);
+    
+    return 0;
+}
