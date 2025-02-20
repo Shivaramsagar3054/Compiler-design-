@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_RULES 10
+#define MAX_SYMBOLS 10
+
+char productions[MAX_RULES][MAX_SYMBOLS];
+char followSets[MAX_SYMBOLS][MAX_SYMBOLS];
+int numProductions;
+
+void addToSet(char *set, char c) {
+    if (strchr(set, c) == NULL) {
+        int len = strlen(set);
+        set[len] = c;
+        set[len + 1] = '\0';
+    }
+}
+
+void computeFollow(char symbol) {
+    if (symbol == productions[0][0]) {
+        addToSet(followSets[symbol - 'A'], '$'); 
+    }
+    for (int i = 0; i < numProductions; i++) {
+        for (int j = 1; productions[i][j] != '\0'; j++) {
+            if (productions[i][j] == symbol) {
+                if (productions[i][j + 1] != '\0') {
+                    addToSet(followSets[symbol - 'A'], productions[i][j + 1]);
+                } else {
+                    computeFollow(productions[i][0]);
+                    strcat(followSets[symbol - 'A'], followSets[productions[i][0] - 'A']);
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    printf("Enter the number of productions: ");
+    scanf("%d", &numProductions);
+    printf("Enter the productions (e.g., Abc for A → Bc):\n");
+    
+    for (int i = 0; i < numProductions; i++) {
+        scanf("%s", productions[i]);
+    }
+    
+    for (int i = 0; i < MAX_SYMBOLS; i++) {
+        followSets[i][0] = '\0';
+    }
+    
+    for (int i = 0; i < numProductions; i++) {
+        computeFollow(productions[i][0]);
+    }
+    
+    printf("FOLLOW sets:\n");
+    for (int i = 0; i < numProductions; i++) {
+        printf("FOLLOW(%c) { %s }\n", productions[i][0], followSets[productions[i][0] - 'A']);
+    }
+    
+    return 0;
+}
